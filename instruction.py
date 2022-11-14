@@ -10,7 +10,7 @@ class Instruction:
         oprtype = self.calc_oprtype(opecode)
         if not oprtype[0][0] and rs != None:
             raise Exception(f"Opecode({opecode}) does not take source register")
-        if not oprtype[0][1] and imm != None:
+        if not oprtype[0][1] and imm != None and not oprtype[1]:
             raise Exception(f"Opecode({opecode}) does not take immidiate value")
         if not oprtype[1] and imm != None and rs != None:
             raise Exception(f"Opecode({opecode}) does not take 3 operands")
