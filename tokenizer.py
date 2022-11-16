@@ -5,7 +5,7 @@ from tokendef import *
 class Tokenizer:
     pattern: re.Pattern
     skip = r"([\s]*(;.*\n)?)*"
-    opecode = r"add|sub|mul|div|cmp|abs|adc|sbc|shl|shr|ash|rol|ror|and|or|not|xor|mov|setl|seth|load|store|jmpa|jmp|nop|hlt"
+    opecode = r"add|sub|mul|div|cmp|abs|adc|sbc|shl|shr|ash|rol|ror|and|or|not|xor|mov|setl|seth|load|store|nop|hlt|jmp|jz|je|jnz|jne|ja|jnbe|jb|jnae|jc|jcc|jr"
     register = r"r1?[0-9]"
     immdval = r"\$-?0?x?b?[0-9a-f]+"
     labelset = r"[a-zA-Z_][a-zA-Z0-9_]*:"

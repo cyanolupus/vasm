@@ -8,11 +8,14 @@ class Instruction:
     def __init__(self, opecode: str, rd: int, rs: int, imm: int):
         self.opc = opecode
         oprtype = self.calc_oprtype(opecode)
-        if not oprtype[0][0] and rs != None:
+        if not oprtype[0] and rd != None:
+            rs = rd
+            rd = None
+        if not oprtype[1][0] and rs != None:
             raise Exception(f"Opecode({opecode}) does not take source register")
-        if not oprtype[0][1] and imm != None and not oprtype[1]:
+        if not oprtype[1][1] and imm != None and not oprtype[1]:
             raise Exception(f"Opecode({opecode}) does not take immidiate value")
-        if not oprtype[1] and imm != None and rs != None:
+        if not oprtype[2] and imm != None and rs != None:
             raise Exception(f"Opecode({opecode}) does not take 3 operands")
 
         if rd == None:
@@ -86,27 +89,39 @@ class Instruction:
                 return 0b001_1000
             case "store":
                 return 0b001_1001
-            case "jmp":
-                return 0b001_1100
-            case "jmpa":
-                return 0b001_1101
             case "nop":
                 return 0b001_1110
             case "hlt":
                 return 0b001_1111
+            case "jmp":
+                return 0b010_0000
+            case "jz" | "je":
+                return 0b010_0001
+            case "jnz" | "jne":
+                return 0b010_0010
+            case "ja" | "jnbe":
+                return 0b010_0011
+            case "jb" | "jnae" | "jc":
+                return 0b010_0100
+            case "jcc":
+                return 0b001_0110
+            case "jr":
+                return 0b001_0111
 
     @staticmethod
-    def calc_oprtype(opecode: str) -> tuple[tuple[bool, bool], bool]:
+    def calc_oprtype(opecode: str) -> tuple[bool, tuple[bool, bool], bool]:
         match opecode:
-            case "add" | "sub" | "mul" | "div" | "cmp" | "abs" | "adc" | "sbc" | "shl" | "shr" | "ash" | "rol" | "ror" | "jmp":
-                return (True, True), False
+            case "add" | "sub" | "mul" | "div" | "cmp" | "abs" | "adc" | "sbc" | "shl" | "shr" | "ash" | "rol" | "ror":
+                return True, (True, True), False
             case "and" | "or" | "not" | "xor":
-                return (True, False), False
+                return True, (True, False), False
             case "setl" | "seth":
-                return (False, True), False
+                return True, (False, True), False
             case "load" | "store":
-                return (True, False), True
-            case "jmpa":
-                return (True, True), False
+                return True, (True, False), True
             case "nop" | "hlt":
-                return (False, False), False
+                return True, (False, False), False
+            case "jmp" | "jz" | "je" | "jnz" | "jne" | "ja" | "jnbe" | "jb" | "jnae" | "jc":
+                return False, (True, True), False
+            case "jcc" | "jr":
+                return True, (True, True), False
