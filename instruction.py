@@ -33,7 +33,7 @@ class Instruction:
             self.imm = imm
 
     def get_bitcode(self) -> str:
-        return f"0b{self.calc_opecode(self.opc):07b}{self.immf:01b}{self.rd:04b}{self.rs:04b}{self.imm:016b}"
+        return f"0b{self.calc_opecode(self.opc):07b}{self.immf:01b}{self.rd:04b}{self.rs:04b}{self.imm & 0xffff:016b}"
     
     def get_hexcode(self) -> str:
         return f"{int(self.get_bitcode(), 2):08x}"
