@@ -49,7 +49,7 @@ class Parser:
                         if name in self.label_dict:
                             imm = self.label_dict[name]
                         else:
-                            raise Exception("Label not found")
+                            raise Exception(f"Label not found: {name}")
                     else:
                         raise Exception("Label cannot be used with immediate value")
                 case End():
